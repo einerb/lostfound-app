@@ -1,0 +1,179 @@
+<app-navbar></app-navbar>
+<div class="container mt-5 mb-5">
+  <div class="row">
+    <div class="col-8">
+      <form [formGroup]="updateForm" (ngSubmit)="onSubmit()" novalidate>
+        <mat-card class="example-card mb-2">
+          <mat-card-header>
+            <mat-card-title>Ajustes de usuario</mat-card-title>
+            <mat-card-subtitle
+              >En esta sección puede actualizar todos los datos referentes al
+              usuario</mat-card-subtitle
+            >
+          </mat-card-header>
+          <hr />
+          <mat-card-content>
+            <table class="example-full-width" cellspacing="0">
+              <tr>
+                <td>
+                  <mat-form-field appearance="fill" class="inherit-w">
+                    <mat-label>Nombres</mat-label>
+                    <input
+                      matInput
+                      placeholder="Nombres"
+                      formControlName="name"
+                    />
+                    <mat-error *ngIf="f.name.hasError('required')">
+                      Los nombres es requerido *
+                    </mat-error>
+                  </mat-form-field>
+                </td>
+                <td>
+                  <mat-form-field appearance="fill" class="inherit-w">
+                    <mat-label>Apellidos</mat-label>
+                    <input
+                      matInput
+                      placeholder="Apellidos"
+                      formControlName="lastname"
+                    />
+                    <mat-error *ngIf="f.lastname.hasError('required')">
+                      Los apellidos es requerido *
+                    </mat-error>
+                  </mat-form-field>
+                </td>
+              </tr>
+            </table>
+
+            <mat-form-field appearance="fill" class="inherit-w">
+              <mat-label>Ocupación</mat-label>
+              <mat-select formControlName="occupation">
+                <mat-option value="">Seleccione ocupación</mat-option>
+                <ng-container *ngFor="let occupation of occupations">
+                  <mat-option value="{{ occupation }}">{{
+                    occupation | titlecase
+                  }}</mat-option>
+                </ng-container>
+              </mat-select>
+            </mat-form-field>
+
+            <table class="example-full-width" cellspacing="0">
+              <tr>
+                <td>
+                  <mat-form-field appearance="fill" class="inherit-w">
+                    <mat-label>Ciudad</mat-label>
+                    <mat-select formControlName="city">
+                      <mat-option value="">Seleccione ciudad</mat-option>
+                      <ng-container *ngFor="let city of cities">
+                        <mat-option value="{{ city }}">{{ city }}</mat-option>
+                      </ng-container>
+                    </mat-select>
+                    <mat-error *ngIf="f.city.hasError('required')">
+                      La ciudad es requerida *
+                    </mat-error>
+                  </mat-form-field>
+                </td>
+                <td>
+                  <mat-form-field appearance="fill" class="inherit-w">
+                    <mat-label>Dirección</mat-label>
+                    <input
+                      matInput
+                      placeholder="Dirección"
+                      formControlName="address"
+                    />
+                  </mat-form-field>
+                </td>
+              </tr>
+            </table>
+
+            <mat-form-field appearance="fill" class="inherit-w">
+              <mat-label>Fecha de cumpleaños</mat-label>
+              <input
+                matInput
+                formControlName="birthdate"
+                [matDatepicker]="dp3"
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="dp3"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #dp3></mat-datepicker>
+              <mat-error *ngIf="f.birthdate.hasError('required')">
+                La fecha de cumpleaños es requerida *
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="inherit-w">
+              <mat-label>Teléfono</mat-label>
+              <span matPrefix>+57 &nbsp;</span>
+              <input matInput placeholder="Teléfono" formControlName="phone" />
+            </mat-form-field>
+          </mat-card-content>
+          <mat-card-actions>
+            <button type="submit" mat-raised-button color="primary">
+              Actualizar
+              <img
+                src="../../../assets/loading.svg"
+                class="m-l-2"
+                *ngIf="loading"
+                alt="Cargando"
+                width="25"
+              />
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </form>
+      <mat-card class="example-card mt-2">
+        <mat-card-header>
+          <mat-card-title class="text-danger">Zona Peligro</mat-card-title>
+        </mat-card-header>
+        <hr />
+        <mat-card-content>
+          <p>
+            La información privada de su usuario no es pública hasta que usted
+            la autorice. Seleccione los campos que desean que sean visibles para
+            todos los demás usuarios para un mejor servicio de búsqueda y
+            comunicación entre usuarios.
+          </p>
+          <section class="example-section">
+            <mat-checkbox
+              class="example-margin"
+              color="warn"
+              [checked]="user?.emailVisible"
+              (change)="onChangeStateEmail(user?.id, $event)"
+              >Correo electrónico</mat-checkbox
+            >
+          </section>
+          <section class="example-section">
+            <mat-checkbox
+              class="example-margin"
+              color="warn"
+              [checked]="user?.phoneVisible"
+              (change)="onChangeStatePhone(user?.id, $event)"
+              >Número de teléfono</mat-checkbox
+            >
+          </section>
+          <section class="example-section mb-4">
+            <mat-checkbox
+              class="example-margin"
+              color="warn"
+              [checked]="user?.occupationVisible"
+              (change)="onChangeStateOccupation(user?.id, $event)"
+              >Ocupación</mat-checkbox
+            >
+          </section>
+          <hr />
+          <section class="example-section">
+            <p>
+              <span class="font-weight-bold">Si</span> ha sido de utilidad esta
+              herramienta y deseas apoyarnos, puedes donar en el siguiente
+              enlace
+            </p>
+            <button mat-raised-button color="warn" (click)="donate()">
+              Necesito donar!
+            </button>
+          </section>
+        </mat-card-content>
+      </mat-card>
+      <hr />
+    </div>
+  </div>
+</div>

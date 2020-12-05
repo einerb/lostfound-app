@@ -1,0 +1,16 @@
+<mat-toolbar color="primary">
+  <span
+    ><a routerLink="/home" style="cursor: pointer; color: #fff"
+      >Lost & Found App</a
+    ></span
+  >
+  <span class="example-spacer"></span>
+  <a routerLink="/home" routerLinkActive="active" mat-button>Inicio</a>
+  <a [routerLink]="['/profile', token.sub]" routerLinkActive="active" mat-button
+    >Perfil</a
+  >
+  <a routerLink="/settings" routerLinkActive="active" mat-button>Ajustes</a>
+  <button mat-icon-button (click)="logout()">
+    <mat-icon>power_settings_new</mat-icon>
+  </button>
+</mat-toolbar>

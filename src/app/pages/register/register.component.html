@@ -1,0 +1,167 @@
+<div class="container">
+  <div class="d-flex justify-content-center">
+    <div class="col-md-7">
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" novalidate>
+        <mat-card class="example-card">
+          <mat-card-header>
+            <mat-card-title>Registro de usuario</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <hr />
+
+            <table class="example-full-width" cellspacing="0">
+              <tr>
+                <td>
+                  <mat-form-field appearance="fill" class="inherit-w">
+                    <mat-label>Nombres</mat-label>
+                    <input
+                      matInput
+                      placeholder="Nombres"
+                      formControlName="name"
+                    />
+                    <mat-error *ngIf="f.name.hasError('required')">
+                      Los nombres es requerido *
+                    </mat-error>
+                  </mat-form-field>
+                </td>
+                <td>
+                  <mat-form-field appearance="fill" class="inherit-w">
+                    <mat-label>Apellidos</mat-label>
+                    <input
+                      matInput
+                      placeholder="Apellidos"
+                      formControlName="lastname"
+                    />
+                    <mat-error *ngIf="f.lastname.hasError('required')">
+                      Los apellidos es requerido *
+                    </mat-error>
+                  </mat-form-field>
+                </td>
+              </tr>
+            </table>
+
+            <mat-form-field appearance="fill" class="inherit-w mt-1">
+              <mat-label>Ocupación</mat-label>
+              <mat-select formControlName="occupation">
+                <mat-option value="">Seleccione ocupación</mat-option>
+                <ng-container *ngFor="let occupation of occupations">
+                  <mat-option value="{{ occupation }}">{{
+                    occupation | titlecase
+                  }}</mat-option>
+                </ng-container>
+              </mat-select>
+            </mat-form-field>
+
+            <table class="example-full-width" cellspacing="0">
+              <tr>
+                <td>
+                  <mat-form-field appearance="fill" class="inherit-w">
+                    <mat-label>Ciudad</mat-label>
+                    <mat-select formControlName="city">
+                      <mat-option value="">Seleccione ciudad</mat-option>
+                      <ng-container *ngFor="let city of cities">
+                        <mat-option value="{{ city }}">{{ city }}</mat-option>
+                      </ng-container>
+                    </mat-select>
+                    <mat-error *ngIf="f.city.hasError('required')">
+                      La ciudad es requerida *
+                    </mat-error>
+                  </mat-form-field>
+                </td>
+                <td>
+                  <mat-form-field appearance="fill" class="inherit-w">
+                    <mat-label>Dirección</mat-label>
+                    <input
+                      matInput
+                      placeholder="Dirección"
+                      formControlName="address"
+                    />
+                  </mat-form-field>
+                </td>
+              </tr>
+            </table>
+
+            <mat-form-field appearance="fill" class="inherit-w">
+              <mat-label>Fecha de cumpleaños</mat-label>
+              <input
+                matInput
+                formControlName="birthdate"
+                [matDatepicker]="dp3"
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="dp3"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #dp3></mat-datepicker>
+              <mat-error *ngIf="f.birthdate.hasError('required')">
+                La fecha de cumpleaños es requerida *
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="inherit-w">
+              <mat-label>Teléfono</mat-label>
+              <span matPrefix>+57 &nbsp;</span>
+              <input matInput placeholder="Teléfono" formControlName="phone" />
+            </mat-form-field>
+
+            <table class="example-full-width" cellspacing="0">
+              <tr>
+                <td>
+                  <mat-form-field appearance="fill" class="inherit-w">
+                    <mat-label>Correo electrónico</mat-label>
+                    <input
+                      matInput
+                      placeholder="Correo electrónico"
+                      formControlName="email"
+                    />
+                    <mat-error *ngIf="f.email.hasError('required')">
+                      El correo electrónico es requerido *
+                    </mat-error>
+                    <mat-error *ngIf="f.email.hasError('pattern')">
+                      El correo electrónico no cumple con el estándar.
+                      example@email.com *
+                    </mat-error>
+                  </mat-form-field>
+                </td>
+                <td>
+                  <mat-form-field appearance="fill" class="inherit-w">
+                    <mat-label>Contraseña</mat-label>
+                    <input
+                      matInput
+                      placeholder="Contraseña"
+                      [type]="hidePwd ? 'password' : 'text'"
+                      formControlName="password"
+                    />
+                    <mat-icon
+                      matSuffix
+                      (click)="hidePwd = !hidePwd"
+                      class="clickable"
+                      >{{ hidePwd ? "visibility_off" : "visibility" }}</mat-icon
+                    >
+                    <mat-error *ngIf="f.password.hasError('required')">
+                      La contraseña es requerida *
+                    </mat-error>
+                  </mat-form-field>
+                </td>
+              </tr>
+            </table>
+          </mat-card-content>
+          <mat-card-actions class="pt-2 pb-2">
+            <button type="submit" class="btn btn-block btn-primary">
+              Registrame!
+              <img
+                src="../../../assets/loading.svg"
+                class="m-l-2"
+                *ngIf="loading"
+                alt="Cargando"
+                width="25"
+              />
+            </button>
+            <a routerLink="/login" class="btn btn-block btn-secondary"
+              >Cancelar</a
+            >
+          </mat-card-actions>
+        </mat-card>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,470 @@
+<app-navbar></app-navbar>
+<div class="container mt-5 mb-5">
+  <div class="row">
+    <div class="col-md-4">
+      <div class="d-flex justify-content-center">
+        <mat-card class="example-card">
+          <mat-card-header>
+            <mat-card-title
+              >{{ user?.name | titlecase }}
+              {{ user?.lastname | titlecase }}</mat-card-title
+            >
+            <mat-card-subtitle>{{ user?.city }}</mat-card-subtitle>
+          </mat-card-header>
+          <img mat-card-image [src]="getImage()" alt="Foto perfil" />
+          <mat-card-content>
+            <p><b>Dirección // </b>{{ user?.address | titlecase }}</p>
+            <ng-container *ngIf="user?.occupationVisible"
+              ><p>
+                <b>Ocupación // </b>{{ user?.occupation | titlecase }}
+              </p></ng-container
+            >
+            <ng-container *ngIf="user?.emailVisible"
+              ><p>
+                <b>Correo electrónico // </b>{{ user?.email }}
+              </p></ng-container
+            >
+            <ng-container *ngIf="user?.phoneVisible"
+              ><p><b>Teléfono // </b>{{ user?.phone }}</p></ng-container
+            >
+            <p>
+              <b>Cumpleaños // </b>{{ user?.birthdate | date: "mediumDate" }}
+            </p>
+          </mat-card-content>
+          <hr />
+          <mat-card-actions>
+            <a mat-button routerLink="/settings" style="text-decoration: none"
+              >Editar</a
+            >
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </div>
+    <div class="col-md-8">
+      <mat-tab-group
+        animationDuration="0ms"
+        #tabGroup
+        (selectedTabChange)="tabChanged($event)"
+      >
+        <mat-tab label="Mi Baúl">
+          <div
+            class="d-flex justify-content-center"
+            *ngIf="accessories.length === 0"
+          >
+            <div class="row">
+              <div class="col-md-12 text-center">
+                <img src="../../../assets/sadface.gif" alt="" width="40%" />
+                <p class="text-muted h5 text-center">
+                  No hay objetos registrados!
+                </p>
+              </div>
+            </div>
+          </div>
+          <!-- Fin -->
+
+          <div class="d-flex justify-content-center">
+            <div class="col-md-12">
+              <mat-card
+                class="example-card mt-3 mb-3"
+                *ngFor="let accessory of accessories"
+              >
+                <mat-card-title
+                  >{{ accessory.name | titlecase }} -
+                  <small>{{
+                    accessory.category | titlecase
+                  }}</small></mat-card-title
+                >
+                <mat-card-subtitle
+                  >Created at:
+                  {{
+                    accessory.createdAt | date: "EEEE, MMMM d, y" | titlecase
+                  }}</mat-card-subtitle
+                >
+                <div class="d-flex justify-content-end">
+                  <mat-card-header>
+                    <button
+                      mat-icon-button
+                      [matMenuTriggerFor]="menu"
+                      aria-label="Example icon-button with a menu"
+                      style="margin-top: -50px"
+                    >
+                      <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu">
+                      <a
+                        mat-menu-item
+                        [routerLink]="[
+                          '/details',
+                          accessory.user[0],
+                          accessory._id
+                        ]"
+                        style="text-decoration: none; color: black"
+                      >
+                        <mat-icon>remove_red_eye</mat-icon>
+                        <span>Ver</span>
+                      </a>
+                      <button mat-menu-item (click)="editAccessory(accessory)">
+                        <mat-icon>edit</mat-icon>
+                        <span>Editar</span>
+                      </button>
+                      <!-- <button mat-menu-item (click)="uploadPhoto(accessory)">
+                        <mat-icon>insert_photo</mat-icon>
+                        <span>Subir evidencias</span>
+                      </button> -->
+                      <button mat-menu-item (click)="onDelete(accessory)">
+                        <mat-icon>close</mat-icon>
+                        <span>Eliminar</span>
+                      </button>
+                    </mat-menu>
+                  </mat-card-header>
+                </div>
+                <div class="row mt-3">
+                  <div class="col-md-7">
+                    <img
+                      src="../../../assets/not-image.jpg"
+                      alt=""
+                      width="100%"
+                    />
+                    <p class="mt-3">
+                      {{ accessory.description | capitalize }}
+                    </p>
+                  </div>
+                  <div class="col-md-5">
+                    <mat-card-content>
+                      <div class="d-flex justify-content-center">
+                        <p style="font-size: medium">
+                          <img
+                            src="{{ accessory.qr }}"
+                            alt="Código Identificador"
+                            matTooltip="Escanee el código con su lector QR"
+                            matTooltipPosition="above"
+                            width="100%"
+                          />
+                          <span class="font-weight-bold">
+                            <mat-icon color="warn">book_online</mat-icon>
+                            Created at:
+                          </span>
+                          {{
+                            accessory.createdAt
+                              | date: "EEEE, MMMM d, y, h:mm:ss a"
+                              | titlecase
+                          }}
+                          <br />
+                          <span class="font-weight-bold">
+                            <mat-icon color="warn">book_online</mat-icon> Fecha
+                            pérdida:
+                          </span>
+                          {{
+                            accessory.lost_date
+                              | date: "EEEE, MMMM d, y, h:mm:ss a"
+                              | titlecase
+                          }}
+                          <br />
+                          <span class="font-weight-bold"
+                            ><mat-icon color="warn">home</mat-icon> Ciudad
+                            perdida: </span
+                          >{{ accessory.place_date | titlecase }} <br />
+                          <span class="font-weight-bold"
+                            ><mat-icon color="warn">monetization_on</mat-icon>
+                            Recompensa: </span
+                          >$ {{ accessory.reward | thousandsPipe }}
+                        </p>
+                      </div>
+                    </mat-card-content>
+                    <hr />
+                    <p
+                      class="text-muted"
+                      *ngIf="
+                        accessory.place_date === '' ||
+                        accessory.lost_date === '' ||
+                        accessory.description === ''
+                      "
+                    >
+                      <span class="font-weight-bold">* </span>Debe llenar los
+                      datos de pérdida para poder reportar: <b>Descripción</b>,
+                      <b>Lugar</b> y
+                      <b>fecha de perdida</b>
+                    </p>
+                    <mat-card-actions>
+                      <div class="d-flex justify-content-center">
+                        <button
+                          mat-raised-button
+                          color="primary"
+                          [disabled]="
+                            accessory.state == 'normal' ||
+                            accessory.state == 'found'
+                          "
+                        >
+                          Encontrado!
+                        </button>
+                        <button
+                          mat-raised-button
+                          color="warn"
+                          [disabled]="
+                            accessory.state == 'lost' ||
+                            accessory.state == 'found' ||
+                            accessory.place_date === '' ||
+                            accessory.lost_date === '' ||
+                            accessory.description === ''
+                          "
+                          (click)="reportState(accessory)"
+                        >
+                          Reportar
+                        </button>
+                      </div>
+                    </mat-card-actions>
+                  </div>
+                </div>
+              </mat-card>
+            </div>
+          </div>
+        </mat-tab>
+        <mat-tab label="Reportados">
+          <div
+            class="d-flex justify-content-center"
+            *ngIf="accessories.length === 0"
+          >
+            <div class="row">
+              <div class="col-md-12 text-center">
+                <img src="../../../assets/sadface.gif" alt="" width="40%" />
+                <p class="text-muted h5 text-center">
+                  No hay objetos reportados como perdidos!
+                </p>
+              </div>
+            </div>
+          </div>
+          <!-- Fin -->
+
+          <div class="d-flex justify-content-center">
+            <div class="col-md-12">
+              <mat-card
+                class="example-card mt-3 mb-3"
+                *ngFor="let accessory of accessories; let i = index"
+              >
+                <mat-card-title
+                  >{{ accessory.name }} -
+                  <small>{{ accessory.category }}</small></mat-card-title
+                >
+                <mat-card-subtitle
+                  >Created at:
+                  {{
+                    accessory.createdAt | date: "EEEE, MMMM d, y" | titlecase
+                  }}</mat-card-subtitle
+                >
+                <div class="d-flex justify-content-end">
+                  <mat-card-header>
+                    <button
+                      mat-icon-button
+                      aria-label="Example icon-button with a menu"
+                      style="margin-top: -50px"
+                      [disabled]="true"
+                    >
+                      <mat-icon>more_vert</mat-icon>
+                    </button>
+                  </mat-card-header>
+                </div>
+                <div class="row mt-3">
+                  <div class="col-md-7">
+                    <img
+                      src="../../../assets/not-image.jpg"
+                      alt=""
+                      width="100%"
+                    />
+                    <p class="mt-3">
+                      {{ accessory.description }}
+                    </p>
+                  </div>
+                  <div class="col-md-5">
+                    <mat-card-content>
+                      <div class="d-flex justify-content-center">
+                        <p style="font-size: medium">
+                          <img
+                            src="{{ accessory.qr }}"
+                            alt="Código Identificador"
+                            matTooltip="Escanee el código con su lector QR"
+                            matTooltipPosition="above"
+                            width="100%"
+                          />
+                          <br />
+                          <span class="font-weight-bold">
+                            <mat-icon color="warn">book_online</mat-icon> Fecha
+                            pérdida:
+                          </span>
+                          {{
+                            accessory.lost_date
+                              | date: "EEEE, MMMM d, y, h:mm:ss a"
+                              | titlecase
+                          }}
+                          <br />
+                          <span class="font-weight-bold"
+                            ><mat-icon color="warn">home</mat-icon> Ciudad
+                            pérdida: </span
+                          >{{ accessory.place_date | titlecase }} <br />
+                          <span class="font-weight-bold"
+                            ><mat-icon color="warn">monetization_on</mat-icon>
+                            Recompensa: </span
+                          >$ {{ accessory.reward | thousandsPipe }}
+                        </p>
+                      </div>
+                    </mat-card-content>
+                    <hr />
+                    <mat-card-actions>
+                      <div class="d-flex justify-content-center">
+                        <button
+                          mat-raised-button
+                          color="primary"
+                          [disabled]="
+                            accessory.state == 'normal' ||
+                            accessory.state == 'found'
+                          "
+                          (click)="foundState(accessory)"
+                        >
+                          Encontrado!
+                        </button>
+                        <button
+                          mat-raised-button
+                          color="warn"
+                          [disabled]="
+                            accessory.state == 'lost' ||
+                            accessory.state == 'found'
+                          "
+                        >
+                          Reportar
+                        </button>
+                      </div>
+                    </mat-card-actions>
+                  </div>
+                </div>
+              </mat-card>
+            </div>
+          </div>
+        </mat-tab>
+        <mat-tab label="Encontrados">
+          <div
+            class="d-flex justify-content-center"
+            *ngIf="accessories.length === 0"
+          >
+            <div class="row">
+              <div class="col-md-12 text-center">
+                <img src="../../../assets/sadface.gif" alt="" width="40%" />
+                <p class="text-muted h5 text-center">
+                  No hay objetos encontrados!
+                </p>
+              </div>
+            </div>
+          </div>
+          <!-- Fin -->
+
+          <div class="d-flex justify-content-center">
+            <div class="col-md-12">
+              <mat-card
+                class="example-card mt-3 mb-3"
+                *ngFor="let accessory of accessories"
+              >
+                <mat-card-title
+                  >{{ accessory.name }} -
+                  <small>{{ accessory.category }}</small></mat-card-title
+                >
+                <mat-card-subtitle
+                  >Created at:
+                  {{
+                    accessory.createdAt | date: "EEEE, MMMM d, y" | titlecase
+                  }}</mat-card-subtitle
+                >
+                <div class="d-flex justify-content-end">
+                  <mat-card-header>
+                    <button
+                      mat-icon-button
+                      aria-label="Example icon-button with a menu"
+                      style="margin-top: -50px"
+                      [disabled]="true"
+                    >
+                      <mat-icon>more_vert</mat-icon>
+                    </button>
+                  </mat-card-header>
+                </div>
+                <div class="row mt-3">
+                  <div class="col-md-7">
+                    <img
+                      src="../../../assets/not-image.jpg"
+                      alt=""
+                      width="100%"
+                    />
+                    <p class="mt-3">
+                      {{ accessory.description }}
+                    </p>
+                  </div>
+                  <div class="col-md-5">
+                    <mat-card-content>
+                      <div class="d-flex justify-content-center">
+                        <p style="font-size: medium">
+                          <img
+                            src="{{ accessory.qr }}"
+                            alt="Código Identificador"
+                            matTooltip="Escanee el código con su lector QR"
+                            matTooltipPosition="above"
+                            width="100%"
+                          />
+                          <br />
+                          <span class="font-weight-bold">
+                            <mat-icon color="warn">book_online</mat-icon> Fecha
+                            pérdida:
+                          </span>
+                          {{
+                            accessory.lost_date
+                              | date: "EEEE, MMMM d, y, h:mm:ss a"
+                              | titlecase
+                          }}
+                          <br />
+                          <span class="font-weight-bold"
+                            ><mat-icon color="warn">home</mat-icon> Ciudad
+                            pérdida: </span
+                          >{{ accessory.place_date | titlecase }} <br />
+                          <span class="font-weight-bold"
+                            ><mat-icon color="warn">monetization_on</mat-icon>
+                            Recompensa: </span
+                          >$ {{ accessory.reward | thousandsPipe }}
+                        </p>
+                      </div>
+                    </mat-card-content>
+                    <hr />
+                    <mat-card-actions>
+                      <div class="d-flex justify-content-center">
+                        <button
+                          mat-raised-button
+                          color="primary"
+                          [disabled]="
+                            accessory.state == 'normal' ||
+                            accessory.state == 'found'
+                          "
+                        >
+                          Encontrado!
+                        </button>
+                        <button
+                          mat-raised-button
+                          color="warn"
+                          [disabled]="
+                            accessory.state == 'lost' ||
+                            accessory.state == 'found'
+                          "
+                        >
+                          Reportar
+                        </button>
+                      </div>
+                    </mat-card-actions>
+                  </div>
+                </div>
+              </mat-card>
+            </div>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </div>
+</div>
+
+<div class="example-button-container">
+  <button mat-fab color="primary" matTooltip="Agregar" (click)="addAccessory()">
+    <mat-icon>add</mat-icon>
+  </button>
+</div>

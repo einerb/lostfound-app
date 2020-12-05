@@ -1,0 +1,12 @@
+<h3 mat-dialog-title>Subir evidencia</h3>
+<hr />
+<form [formGroup]="uploadForm" (ngSubmit)="onSubmit()" novalidate>
+  <div mat-dialog-content>
+    <input type="file" formControlName="photos" (change)="onFileSelected($event)" />
+  </div>
+  <hr />
+  <div mat-dialog-actions>
+    <button mat-raised-button color="primary" type="submit">Subir</button>
+    <button mat-raised-button mat-dialog-close>Cerrar</button>
+  </div>
+</form>
